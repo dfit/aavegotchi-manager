@@ -16,8 +16,8 @@ module.exports = {
   },
   async petGotchi(gotchi) {
     const needToBePetted = new Date(gotchi.lastInteracted * 1000).setHours(new Date(gotchi.lastInteracted * 1000).getHours() + 12) < new Date()
-    if(needToBePetted) {
-      const transaction = configuration.aavegotchiContract.methods.interact(gotchi.tokenId);
+    if(!needToBePetted) {
+      const transaction = configuration.aavegotchiContract.methods.interact([gotchi.tokenId]);
       await this.sendWithPrivateKey(transaction);
       console.log(`Gotchi ${gotchi.tokenId} have been petted !`)
     } else {
