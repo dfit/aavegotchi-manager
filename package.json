@@ -1,0 +1,15 @@
+{
+  "name": "bot2",
+  "version": "1.0.0",
+  "description": "Gotchi manager",
+  "main": "main.js",
+  "scripts": {
+    "run": "node main"
+  },
+  "dependencies": {
+    "console-stamp": "^3.0.4",
+    "web3": "^1.7.1"
+  },
+  "author": "dfit",
+  "license": "ISC"
+}
