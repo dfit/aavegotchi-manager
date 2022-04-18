@@ -2,19 +2,28 @@ require('console-stamp')(console, 'yyyy-mm-dd HH:MM:ss.l');
 const subscriber = require("./src/subscriber")
 const configuration = require('./configuration');
 const diamondcontract = require('./data/diamondcontract');
+const gotchiManager = require('./src/gotchiManager');
+const walletUtil = require('./src/walletUtil');
+const naiveAlgo = require('./src/naiveAlgo');
 
 async function setup() {
   configuration.privateKey = process.env.PRIVATE_KEY
-  // configuration.walletAddress = wallet.getWalletAddressByWeb3Connect()
+  configuration.walletAddress = walletUtil.getWalletAddress()
   configuration.aavegotchiContract = new configuration.web3.eth.Contract(diamondcontract.abi, diamondcontract.smartContractAddress);
-  configuration.bcSubscription = await subscriber.subscribeSmartContractPastEvent();
+  await gotchiManager.populateGotchisInformations()
+  configuration.gotchiList = await gotchiManager.getGotchiList()
+  // subscriber.subscribeClaimGotchiLending()
+  subscriber.subscribeGotchisCaring()
+  // subscriber.subscribeGotchiToLendingService()
+  // configuration.bcSubscription = await subscriber.subscribeSmartContractEvent();
 }
 
 async function main() {
   await setup();
   while (true) {
-    console.log("Waiting...")
-    await new Promise(resolve => setTimeout(resolve, 60000));
+    console.log("Initiate naive algo...")
+    await naiveAlgo.routineCheck()
+    await new Promise(resolve => setTimeout(resolve, 300000));
   }
 }
 main()
