@@ -7,12 +7,13 @@ module.exports = {
   },
   async sendWithPrivateKey(transaction, callback, parameter) {
   const account = configuration.web3.eth.accounts.privateKeyToAccount(configuration.privateKey).address;
+  const estimateGas = await configuration.web3.eth.getGasPrice();
   const options = {
     to: transaction._parent._address,
     data: transaction.encodeABI(),
     gas: await transaction.estimateGas({from: account}),
-    maxFeePerGas: configuration.web3.utils.toWei("30","Gwei"),
-    maxPriorityFeePerGas: configuration.web3.utils.toWei("30","Gwei"),
+    maxFeePerGas: estimateGas < configuration.web3.utils.toWei("40", "Gwei") ? estimateGas : configuration.web3.utils.toWei("40", "Gwei"),
+    maxPriorityFeePerGas: estimateGas < configuration.web3.utils.toWei("40", "Gwei") ? estimateGas : configuration.web3.utils.toWei("40", "Gwei"),
     type: 0x2
   };
   const signed  = await configuration.web3.eth.accounts.signTransaction(options, configuration.privateKey);
