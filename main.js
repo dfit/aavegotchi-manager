@@ -10,10 +10,10 @@ async function setup() {
   configuration.privateKey = process.env.PRIVATE_KEY
   configuration.walletAddress = walletUtil.getWalletAddress()
   configuration.aavegotchiContract = new configuration.web3.eth.Contract(diamondcontract.abi, diamondcontract.smartContractAddress);
-  await gotchiManager.populateGotchisInformations()
-  configuration.gotchiList = await gotchiManager.getGotchiList()
+
+  // ---- VERSION WITH OPTIMAL JOB (to rework) ----
   // subscriber.subscribeClaimGotchiLending()
-  subscriber.subscribeGotchisCaring()
+  // subscriber.subscribeGotchisCaring()
   // subscriber.subscribeGotchiToLendingService()
   // configuration.bcSubscription = await subscriber.subscribeSmartContractEvent();
 }

@@ -5,7 +5,7 @@ module.exports = {
     console.log(`Public address : ${account.address}`)
     return account.address;
   },
-  async sendWithPrivateKey(transaction) {
+  async sendWithPrivateKey(transaction, callback, parameter) {
   const account = configuration.web3.eth.accounts.privateKeyToAccount(configuration.privateKey).address;
   const gasPrice = await configuration.web3.eth.getGasPrice();
   const options = {
@@ -19,8 +19,11 @@ module.exports = {
   .on('transactionHash',(hash) => {
     console.log('txHash: ', hash)
   })
-  .on('receipt',(receipt) => {
+  .on('receipt',async (receipt) => {
     console.log('receipt: ', receipt)
+    if (callback != null && parameter != null) {
+      await callback(parameter);
+    }
   })
   .on('error', (error => {
     console.log('error: ', error)

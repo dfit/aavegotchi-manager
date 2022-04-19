@@ -31,9 +31,14 @@ module.exports = {
       }, nextInteractionInSec)
     });
   },
+  async petGotchiV2(gotchi) {
+    const transaction = configuration.aavegotchiContract.methods.interact([gotchi.tokenId]);
+    await walletUtil.sendWithPrivateKey(transaction);
+    console.log(`Gotchi ${gotchi.tokenId} have been petted !`)
+  },
   async claimGotchiLending(gotchi) {
     const transaction = await configuration.aavegotchiContract.methods.claimAndEndGotchiLending(gotchi.tokenId)
-    await walletUtil.sendWithPrivateKey(transaction);
+    await walletUtil.sendWithPrivateKey(transaction, this.lendGotchi, gotchi);
     console.log(`Gotchi ${gotchi.tokenId} has been claimed.`)
   },
   async populateGotchisInformations() {
@@ -44,9 +49,9 @@ module.exports = {
     }
     configuration.gotchis = gotchisInformations
   },
-  async getGotchiList() {
-    const allAavegotchisOfOwnerRes = await configuration.aavegotchiContract.methods.allAavegotchisOfOwner(configuration.walletAddress).call();
-    console.log(`Gotchi(s) of wallet ${configuration.walletAddress} found : ${allAavegotchisOfOwnerRes.map(gotchi => gotchi.tokenId).join(",")}`)
-    configuration.gotchis = allAavegotchisOfOwnerRes.length > 0 ? allAavegotchisOfOwnerRes : configuration.gotchis
-  }
+  // async getGotchiList() {
+  //   const allAavegotchisOfOwnerRes = await configuration.aavegotchiContract.methods.allAavegotchisOfOwner(configuration.walletAddress).call();
+  //   console.log(`Gotchi(s) of wallet ${configuration.walletAddress} found : ${allAavegotchisOfOwnerRes.map(gotchi => gotchi.tokenId).join(",")}`)
+  //   configuration.gotchis = allAavegotchisOfOwnerRes.length > 0 ? allAavegotchisOfOwnerRes : configuration.gotchis
+  // }
 }
