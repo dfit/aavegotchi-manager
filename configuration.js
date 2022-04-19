@@ -10,6 +10,7 @@ module.exports = {
   walletAddress: null,
   privateKey: "",
   bcSubscription: null,
+  ghstContract: null,
   aavegotchiContract: null,
   lendParameters : {
     thirdPartyAddress: "0x0000000000000000000000000000000000000000",

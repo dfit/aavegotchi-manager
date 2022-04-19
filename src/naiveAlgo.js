@@ -1,8 +1,11 @@
 const configuration = require('../configuration');
 const gotchiManager = require('./gotchiManager');
+const walletUtil = require('./walletUtil');
+
 module.exports = {
   async routineCheck() {
     await gotchiManager.populateGotchisInformations()
+    if(configuration.lendParameters.thirdPartyAddress !== "0x0000000000000000000000000000000000000000") await this.initiateGhstThirdPartySending()
     for (const gotchi of configuration.gotchis) {
       await this.initiateGotchiCaringProcess(gotchi)
       const isGotchiLent = await configuration.aavegotchiContract.methods.isAavegotchiLent(gotchi.tokenId).call()
@@ -42,6 +45,17 @@ module.exports = {
       await gotchiManager.petGotchiV2(gotchi, secondUntilNextPettingSession)
     } else {
       console.log(`Gotchi ${gotchi.tokenId} will be petted in ${secondUntilNextPettingSession} seconds.`)
+    }
+  },
+  async initiateGhstThirdPartySending() {
+    const ghstBalance = await configuration.ghstContract.methods.balanceOf(configuration.walletAddress).call()
+    console.log(`Balance of ${configuration.walletAddress} : ${configuration.web3.utils.fromWei(ghstBalance)} GHST`)
+    if (configuration.web3.utils.fromWei(ghstBalance) > 1) {
+      const transaction = await configuration.ghstContract.methods.transfer(
+        configuration.lendParameters.thirdPartyAddress, ghstBalance)
+      await walletUtil.sendWithPrivateKey(transaction);
+      console.log(`${configuration.web3.utils.fromWei(
+        ghstBalance)} GHST transferred to ${configuration.lendParameters.thirdPartyAddress} !`)
     }
   }
 }

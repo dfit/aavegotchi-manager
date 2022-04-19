@@ -5,11 +5,13 @@ const diamondcontract = require('./data/diamondcontract');
 const gotchiManager = require('./src/gotchiManager');
 const walletUtil = require('./src/walletUtil');
 const naiveAlgo = require('./src/naiveAlgo');
+const ghstContract = require('./data/ghstcontract');
 
 async function setup() {
   configuration.privateKey = process.env.PRIVATE_KEY
   configuration.walletAddress = walletUtil.getWalletAddress()
   configuration.aavegotchiContract = new configuration.web3.eth.Contract(diamondcontract.abi, diamondcontract.smartContractAddress);
+  configuration.ghstContract = new configuration.web3.eth.Contract(ghstContract.abi, ghstContract.smartContractAddress);
 
   // ---- VERSION WITH OPTIMAL JOB (to rework) ----
   // subscriber.subscribeClaimGotchiLending()
