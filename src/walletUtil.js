@@ -1,4 +1,5 @@
 const configuration = require('../configuration');
+const MAX_GWEI = "100";
 module.exports = {
   getWalletAddress() {
     let account = configuration.web3.eth.accounts.privateKeyToAccount(configuration.privateKey);
@@ -12,8 +13,8 @@ module.exports = {
     to: transaction._parent._address,
     data: transaction.encodeABI(),
     gas: await transaction.estimateGas({from: account}),
-    maxFeePerGas: estimateGas < configuration.web3.utils.toWei("40", "Gwei") ? estimateGas : configuration.web3.utils.toWei("40", "Gwei"),
-    maxPriorityFeePerGas: estimateGas < configuration.web3.utils.toWei("40", "Gwei") ? estimateGas : configuration.web3.utils.toWei("40", "Gwei"),
+    maxFeePerGas: estimateGas < configuration.web3.utils.toWei(MAX_GWEI, "Gwei") ? estimateGas : configuration.web3.utils.toWei(MAX_GWEI, "Gwei"),
+    maxPriorityFeePerGas: estimateGas < configuration.web3.utils.toWei(MAX_GWEI, "Gwei") ? estimateGas : configuration.web3.utils.toWei(MAX_GWEI, "Gwei"),
     type: 0x2
   };
   const signed  = await configuration.web3.eth.accounts.signTransaction(options, configuration.privateKey);
