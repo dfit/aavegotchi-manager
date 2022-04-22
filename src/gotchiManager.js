@@ -52,7 +52,7 @@ module.exports = {
   },
   // async getGotchiList() {
   //   const allAavegotchisOfOwnerRes = await configuration.aavegotchiContract.methods.allAavegotchisOfOwner(configuration.walletAddress).call();
-  //   discordClient.sendInfo(`Gotchi(s) of wallet ${configuration.walletAddress} found : ${allAavegotchisOfOwnerRes.map(gotchi => gotchi.tokenId).join(",")}`)
+  //   discordClient.logInfo(`Gotchi(s) of wallet ${configuration.walletAddress} found : ${allAavegotchisOfOwnerRes.map(gotchi => gotchi.tokenId).join(",")}`)
   //   configuration.gotchis = allAavegotchisOfOwnerRes.length > 0 ? allAavegotchisOfOwnerRes : configuration.gotchis
   // }
 }
