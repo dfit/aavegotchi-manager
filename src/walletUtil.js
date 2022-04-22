@@ -1,9 +1,10 @@
 const configuration = require('../configuration');
-const MAX_GWEI = "100";
+const discordClient = require('./discordLogClient');
+const MAX_GWEI = "80";
 module.exports = {
   getWalletAddress() {
     let account = configuration.web3.eth.accounts.privateKeyToAccount(configuration.privateKey);
-    console.log(`Public address : ${account.address}`)
+    discordClient.logInfo(`Public address : ${account.address}`)
     return account.address;
   },
   async sendWithPrivateKey(transaction, callback, parameter) {
@@ -20,16 +21,16 @@ module.exports = {
   const signed  = await configuration.web3.eth.accounts.signTransaction(options, configuration.privateKey);
   configuration.web3.eth.sendSignedTransaction(signed.rawTransaction)
   .on('transactionHash',(hash) => {
-    console.log('txHash: ', hash)
+    discordClient.logInfo('txHash: ', hash)
   })
   .on('receipt',async (receipt) => {
-    console.log('receipt: ', receipt)
+    discordClient.logInfo('receipt: ', receipt)
     if (callback != null && parameter != null) {
       await callback(parameter);
     }
   })
   .on('error', (error => {
-    console.log('error: ', error)
+    discordClient.logError('error: ', error)
   }));
 }
 }

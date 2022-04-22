@@ -6,8 +6,10 @@ const gotchiManager = require('./src/gotchiManager');
 const walletUtil = require('./src/walletUtil');
 const naiveAlgo = require('./src/naiveAlgo');
 const ghstContract = require('./data/ghstcontract');
+const discordClient = require('./src/discordLogClient');
 
 async function setup() {
+  await discordClient.loginBotToDiscord()
   configuration.privateKey = process.env.PRIVATE_KEY
   configuration.walletAddress = walletUtil.getWalletAddress()
   configuration.aavegotchiContract = new configuration.web3.eth.Contract(diamondcontract.abi, diamondcontract.smartContractAddress);
@@ -23,9 +25,9 @@ async function setup() {
 async function main() {
   await setup();
   while (true) {
-    console.log("Initiate naive algo...")
+    discordClient.sendInfo("Initiate naive algo...")
     await naiveAlgo.routineCheck()
-    await new Promise(resolve => setTimeout(resolve, 300000));
+    await new Promise(resolve => setTimeout(resolve, 400000));
   }
 }
 main()

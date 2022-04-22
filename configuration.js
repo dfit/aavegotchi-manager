@@ -5,6 +5,10 @@ let web3Wss = new Web3(providerWSS);
 let web3 = new Web3(providerHttp);
 
 module.exports = {
+  discordLogLevel: {
+    info: false,
+    error: true
+  },
   web3Wss: web3Wss,
   web3: web3,
   walletAddress: null,
