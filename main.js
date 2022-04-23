@@ -9,7 +9,7 @@ const ghstContract = require('./data/ghstcontract');
 const discordClient = require('./src/discordLogClient');
 
 async function setup() {
-  await discordClient.loginBotToDiscord()
+  await discordClient.setupDiscordBot()
   configuration.privateKey = process.env.PRIVATE_KEY
   configuration.walletAddress = walletUtil.getWalletAddress()
   configuration.aavegotchiContract = new configuration.web3.eth.Contract(diamondcontract.abi, diamondcontract.smartContractAddress);

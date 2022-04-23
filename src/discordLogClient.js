@@ -4,22 +4,46 @@ const token = process.env.DISCORD_TOKEN
 const idChannelAlerting = process.env.ID_CHANNEL_ALERTING
 const idChannelInfo = process.env.ID_CHANNEL_INFO
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const TIME_UNTIL_NEXT_COMMON_COM = 14400000
 module.exports = {
-  async logError(error) {
+  logError(error) {
     console.log(error)
     if(configuration.discordLogLevel.error) {
-      const channel = await client.channels.fetch(idChannelAlerting);
-      await channel.send(error)
+      client.channels.fetch(idChannelAlerting).then(channel => channel.send(message));
     }
   },
-  async logInfo(message) {
+  logInfo(message) {
     console.log(message)
     if(configuration.discordLogLevel.info) {
-      const channel = await client.channels.fetch(idChannelInfo);
-      await channel.send(message)
+      client.channels.fetch(idChannelInfo).then(channel => channel.send(message));
     }
   },
-  async loginBotToDiscord() {
+  logTransaction(message) {
+    client.channels.fetch(idChannelInfo).then(channel => channel.send(`@everyone ${message}`));
+  },
+  async setupDiscordBot() {
     await client.login(token);
+    this.notifyCurrentState()
+  },
+  notifyCurrentState() {
+    setTimeout(() => {
+      client.channels.fetch(idChannelInfo).then(async channel => {
+        let message = ""
+        for (const gotchi of configuration.gotchis) {
+          if(gotchi.isLent) {
+            const timeRemaining = (gotchi.lendingDetails.timeAgreed * 1000 + gotchi.lendingDetails.period * 1000) - new Date().getTime()
+            message += `${gotchi.tokenId} is lent for ${timeRemaining / 1000 / 60 / 60} hour(s)\n`
+          } else if(gotchi.lendingDetails && gotchi.lendingDetails.timeAgreed === "0") {
+            message += `${gotchi.tokenId} is listed but not lent\n`
+          } else {
+            message += `${gotchi.tokenId} is not listed\n`
+          }
+        }
+        const ghstBalance = configuration.web3.utils.fromWei(await configuration.ghstContract.methods.balanceOf(configuration.walletAddress).call())
+        message+= `Current GHST balance is : ${ghstBalance}`
+        channel.send(`@everyone Here the news:\n${message}`)
+        this.notifyCurrentState()
+      });
+    }, TIME_UNTIL_NEXT_COMMON_COM)
   }
 }

@@ -24,5 +24,5 @@ module.exports = {
     owner: 30,
     other: 0
   },
-  gotchis: [{tokenId: 20322}] // override with gotchis in case gotchi already lend I cannot get the original owner of the gotchi easily todo
+  gotchis: [{tokenId: 20322, infos: null, isLent: false, lendingInformations: null}] // override with gotchis in case gotchi already lend I cannot get the original owner of the gotchi easily todo
 }

@@ -9,7 +9,7 @@
   "dependencies": {
     "console-stamp": "^3.0.4",
     "discord.js": "^13.6.0",
-    "web3": "^1.7.1"
+    "web3": "^1.7.3"
   },
   "author": "dfit",
   "license": "ISC"

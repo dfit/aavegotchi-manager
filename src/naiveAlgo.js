@@ -10,10 +10,12 @@ module.exports = {
     for (const gotchi of configuration.gotchis) {
       await this.initiateGotchiCaringProcess(gotchi)
       const isGotchiLent = await configuration.aavegotchiContract.methods.isAavegotchiLent(gotchi.tokenId).call()
+      gotchi.isLent = isGotchiLent
       let lendingDetails = null
       try {
         lendingDetails = await configuration.aavegotchiContract.methods.getGotchiLendingFromToken(
           gotchi.tokenId).call()
+        gotchi.lendingDetails = lendingDetails
       } catch (error) {
         discordClient.logInfo(`No listing found for Gotchi ${gotchi.tokenId}.`)
       }
@@ -39,8 +41,8 @@ module.exports = {
     await gotchiManager.lendGotchi(gotchi)
   },
   async initiateGotchiCaringProcess(gotchi) {
-    const nextInteractionDate = new Date(gotchi.lastInteracted * 1000).setHours(
-      new Date(gotchi.lastInteracted * 1000).getHours() + 12)
+    const nextInteractionDate = new Date(gotchi.infos.lastInteracted * 1000).setHours(
+      new Date(gotchi.infos.lastInteracted * 1000).getHours() + 12)
     const secondUntilNextPettingSession = (nextInteractionDate - new Date().getTime()) / 1000
     if(secondUntilNextPettingSession < 0) {
       await gotchiManager.petGotchiV2(gotchi, secondUntilNextPettingSession)
@@ -55,7 +57,7 @@ module.exports = {
       const transaction = await configuration.ghstContract.methods.transfer(
         configuration.lendParameters.thirdPartyAddress, ghstBalance)
       await walletUtil.sendWithPrivateKey(transaction);
-      discordClient.logInfo(`${configuration.web3.utils.fromWei(
+      discordClient.logTransaction(`${configuration.web3.utils.fromWei(
         ghstBalance)} GHST transferred to ${configuration.lendParameters.thirdPartyAddress} !`)
     }
   }

@@ -43,8 +43,8 @@ module.exports = {
   },
   async subscribeGotchisCaring() {
     for (const gotchi of configuration.gotchis) {
-      const nextInteractionDate = new Date(gotchi.lastInteracted * 1000).setHours(
-        new Date(gotchi.lastInteracted * 1000).getHours() + 12)
+      const nextInteractionDate = new Date(gotchi.infos.lastInteracted * 1000).setHours(
+        new Date(gotchi.infos.lastInteracted * 1000).getHours() + 12)
       const secondUntilNextPettingSession = (nextInteractionDate - new Date().getTime()) / 1000
       gotchiManager.petGotchi(gotchi, secondUntilNextPettingSession)
     }
