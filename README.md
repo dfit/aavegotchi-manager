@@ -15,6 +15,9 @@ The manager will for each gotchis given :
 
 It will also optionally transfer any GHST earn to a secured wallet.
 
+A discord bot is connected and send all error to a dedicated channel if setup. It also send all interesting transaction (eg: lend, pet, claimed) to an info channel. A time based report send the current ghst hold by the wallet + the current lending state of the gotchi.
+
+
 
 ## How it works ##
 
@@ -27,6 +30,7 @@ An update will use only events to perform actions and will be more efficient.
 
 * node
 * [Alchemy](https://dashboard.alchemyapi.io/) account (free for this usage)
+* [Discord bot](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot) set
 * (pm2 if wanted)
 
 
@@ -47,10 +51,14 @@ https://github.com/dfit/aavegotchi-manager.git
 npm install
 ```
 
-### 3. Export private key (until I find something better ...)
+### 3. Env vars
 
 ```bash 
-export PRIVATE_KEY=<enter-your-private-key>
+export PRIVATE_KEY=<enter-your-private-key> 
+//private key (until I find something better ...)
+export ID_CHANNEL_ALERTING=<enter-your-alert-channel-id>
+export ID_CHANNEL_INFO=<enter-your-info-channel-id>
+export DISCORD_TOKEN=<enter-your-discord-token>
 ```
 
 ### 4. How to run the bot
@@ -72,7 +80,7 @@ pm2 start main.js --no-autorestart -- https://polygon-mainnet.g.alchemy.com/v2/<
 
 `node main https://polygon-mainnet.g.alchemy.com/v2/<replace-with-your-cred> wss://polygon-mainnet.g.alchemy.com/v2/<replace-with-your-cred>`
 ```bash
-[2022-04-19 19:18:55.394] [LOG]   Public address : 0xa2389438851A7eFBa37bC45ebE2be558c4bA3055
+[2022-04-19 19:18:55.394] [LOG]   Public address : 0xa9589438851A7eFBa37bC45ebE2be558c4bA3055
 [2022-04-19 19:18:55.415] [LOG]   Initiate naive algo...
 [2022-04-19 19:18:56.148] [LOG]   Balance of 0xa9589438851A7eFBa37bC45ebE2be558c4bA3055 : 0 GHST
 [2022-04-19 19:18:56.149] [LOG]   Gotchi 99999 will be petted in 29925.851 seconds.
