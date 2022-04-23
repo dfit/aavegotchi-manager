@@ -21,16 +21,16 @@ module.exports = {
   const signed  = await configuration.web3.eth.accounts.signTransaction(options, configuration.privateKey);
   configuration.web3.eth.sendSignedTransaction(signed.rawTransaction)
   .on('transactionHash',(hash) => {
-    discordClient.logInfo('txHash: ', hash)
+    discordClient.logInfo(`txHash: ${JSON.stringify(hash)}`)
   })
   .on('receipt',async (receipt) => {
-    discordClient.logInfo('receipt: ', receipt)
+    discordClient.logInfo(`receipt: ${JSON.stringify(receipt)}`)
     if (callback != null && parameter != null) {
       await callback(parameter);
     }
   })
   .on('error', (error => {
-    discordClient.logError('error: ', error)
+    discordClient.logError(`error: ${JSON.stringify(error)}`)
   }));
 }
 }
