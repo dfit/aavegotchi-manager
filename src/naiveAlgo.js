@@ -17,6 +17,7 @@ module.exports = {
           gotchi.tokenId).call()
         gotchi.lendingDetails = lendingDetails
       } catch (error) {
+        gotchi.lendingDetails = null
         discordClient.logInfo(`No listing found for Gotchi ${gotchi.tokenId}.`)
       }
       if(isGotchiLent) {
