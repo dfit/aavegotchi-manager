@@ -47,6 +47,7 @@ module.exports = {
       const gotchiInfos = await configuration.aavegotchiContract.methods.getAavegotchi(gotchi.tokenId).call()
       configuration.gotchis.find(gotchiInConfig => gotchiInConfig.tokenId = gotchi.tokenId).infos = gotchiInfos
     }
+    discordClient.logInfo(`Gotchis infos refresh.`)
   },
   // async getGotchiList() {
   //   const allAavegotchisOfOwnerRes = await configuration.aavegotchiContract.methods.allAavegotchisOfOwner(configuration.walletAddress).call();

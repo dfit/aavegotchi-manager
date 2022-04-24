@@ -4,7 +4,7 @@ const token = process.env.DISCORD_TOKEN
 const idChannelAlerting = process.env.ID_CHANNEL_ALERTING
 const idChannelInfo = process.env.ID_CHANNEL_INFO
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
-const TIME_UNTIL_NEXT_COMMON_COM = 14400000
+const TIME_UNTIL_NEXT_COMMON_COM = 9000000
 module.exports = {
   logError(error) {
     console.log(error)
@@ -32,7 +32,11 @@ module.exports = {
         for (const gotchi of configuration.gotchis) {
           if(gotchi.isLent) {
             const timeRemaining = (gotchi.lendingDetails.timeAgreed * 1000 + gotchi.lendingDetails.period * 1000) - new Date().getTime()
-            message += `${gotchi.tokenId} is lent for ${timeRemaining / 1000 / 60 / 60} hour(s)\n`
+            if(timeRemaining < 0) {
+              message += `${gotchi.tokenId} should be claimed since ${timeRemaining / 1000 / 60 / 60} hour(s)\n`
+            } else {
+              message += `${gotchi.tokenId} is lent for ${timeRemaining / 1000 / 60 / 60} hour(s)\n`
+            }
           } else if(gotchi.lendingDetails && gotchi.lendingDetails.timeAgreed === "0") {
             message += `${gotchi.tokenId} is listed but not lent\n`
           } else {

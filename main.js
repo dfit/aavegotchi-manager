@@ -25,8 +25,12 @@ async function setup() {
 async function main() {
   await setup();
   while (true) {
-    discordClient.logInfo("Initiate naive algo...")
-    await naiveAlgo.routineCheck()
+    try {
+      discordClient.logInfo("Initiate naive algo...")
+      await naiveAlgo.routineCheck()
+    } catch (e) {
+      discordClient.logError(e)
+    }
     await new Promise(resolve => setTimeout(resolve, 400000));
   }
 }

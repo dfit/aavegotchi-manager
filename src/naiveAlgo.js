@@ -30,8 +30,9 @@ module.exports = {
     }
   },
   async initiateLendingCheckProcess(gotchi, lendingDetails) {
-    discordClient.logInfo(`Gotchi ${gotchi.tokenId} is already listed or borrowed by ${lendingDetails.borrower}.`)
-    if(new Date().getTime() > (lendingDetails.timeAgreed * 1000 + lendingDetails.period * 1000)) {
+    const timeRemaining = (lendingDetails.timeAgreed * 1000 + lendingDetails.period * 1000) - new Date().getTime()
+    discordClient.logInfo(`Gotchi ${gotchi.tokenId} is borrowed by ${lendingDetails.borrower} for ${timeRemaining / 1000 / 60} minute(s)`)
+    if(timeRemaining <= 0) {
       discordClient.logInfo(`Gotchi ${gotchi.tokenId} is going to be claimed.`)
       await gotchiManager.claimGotchiLending(gotchi)
     } else {
