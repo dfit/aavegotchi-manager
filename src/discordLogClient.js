@@ -6,8 +6,8 @@ const idChannelInfo = process.env.ID_CHANNEL_INFO
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 const TIME_UNTIL_NEXT_COMMON_COM = 9000000
 module.exports = {
-  logError(error) {
-    console.log(error)
+  logError(message) {
+    console.log(message)
     if(configuration.discordLogLevel.error) {
       client.channels.fetch(idChannelAlerting).then(channel => channel.send(message));
     }
