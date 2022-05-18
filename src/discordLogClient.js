@@ -9,7 +9,7 @@ module.exports = {
   logError(message) {
     console.log(message)
     if(configuration.discordLogLevel.error) {
-      client.channels.fetch(idChannelAlerting).then(channel => channel.send(message));
+      client.channels.fetch(idChannelAlerting).then(channel => channel.send(`@everyone ${message.message}`));
     }
   },
   logInfo(message) {
