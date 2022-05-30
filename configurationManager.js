@@ -13,7 +13,7 @@ module.exports = {
     fs.readFile(configurationFile, function(err, data) {
       if(err) throw err;
       data = data.toString();
-      data = data.replace(/ghstUpfrontCost: .*,/g, `ghstUpfrontCost: ${ghstUpfrontCost},`);
+      data = data.replace(/ghstUpfrontCost: .*,/g, `ghstUpfrontCost: "${ghstUpfrontCost}",`);
       data = data.replace(/borrower: .*,/g, `borrower: ${borrowerShare},`);
       data = data.replace(/owner: .*,/g, `owner: ${ownerShare},`);
       data = data.replace(/time: .*,/g, `time: ${lendingDuration},`);
