@@ -1,6 +1,6 @@
 const configuration = require('../configuration');
 const walletUtil = require('./walletUtil');
-const discordClient = require('./discordLogClient');
+const discordClient = require('./discord/discordBotManager');
 
 const TWELVE_HOURS_PLUS_10_SEC = 43210;
 module.exports = {
@@ -8,6 +8,8 @@ module.exports = {
     const isGotchiLent = await configuration.aavegotchiContract.methods.isAavegotchiLent(gotchi.tokenId).call()
     if(isGotchiLent) {
       discordClient.logInfo(`Gotchi ${gotchi.tokenId} is already listed or borrowed by someone.`)
+    } else if(configuration.lending === false){
+      discordClient.logInfo(`Listing gotchis is disabled for now, change parameter to resume gotchi listing.`)
     } else {
       discordClient.logInfo(`Listing Gotchi ${gotchi.tokenId}.`)
       const transaction = await configuration.aavegotchiContract.methods.addGotchiLending(gotchi.tokenId,
@@ -49,6 +51,16 @@ module.exports = {
     }
     discordClient.logInfo(`Gotchis infos refresh.`)
   },
+  async unlistGotchi(gotchi) {
+    const isGotchiLent = await configuration.aavegotchiContract.methods.isAavegotchiLent(gotchi.tokenId).call()
+    if(isGotchiLent) {
+      discordClient.logInfo(`Can't de-list ${gotchi.tokenId} now because still rented.`)
+    } else if(gotchi.lendingDetails  && gotchi.lendingDetails.timeAgreed === "0") {
+      const transaction = await configuration.aavegotchiContract.methods.cancelGotchiLending(gotchi.tokenId)
+      await walletUtil.sendWithPrivateKey(transaction);
+      discordClient.logTransaction(`Gotchi ${gotchi.tokenId} de-listed.`)
+    }
+  }
   // async getGotchiList() {
   //   const allAavegotchisOfOwnerRes = await configuration.aavegotchiContract.methods.allAavegotchisOfOwner(configuration.walletAddress).call();
   //   discordClient.logInfo(`Gotchi(s) of wallet ${configuration.walletAddress} found : ${allAavegotchisOfOwnerRes.map(gotchi => gotchi.tokenId).join(",")}`)

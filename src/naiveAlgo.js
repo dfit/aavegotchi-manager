@@ -1,7 +1,7 @@
 const configuration = require('../configuration');
 const gotchiManager = require('./gotchiManager');
 const walletUtil = require('./walletUtil');
-const discordClient = require('./discordLogClient');
+const discordClient = require('./discord/discordBotManager');
 
 module.exports = {
   async routineCheck() {
@@ -25,7 +25,7 @@ module.exports = {
       } else if(lendingDetails && lendingDetails.timeAgreed === "0") {
         discordClient.logInfo(`Gotchi ${gotchi.tokenId} listed but not rented yet.`)
       } else {
-        await this.initiateLendingStartProcess(gotchi)
+        await this.initiateLendingProcess(gotchi)
       }
     }
   },
@@ -39,8 +39,12 @@ module.exports = {
       discordClient.logInfo(`Gotchi ${gotchi.tokenId} can't be claimed yet.`)
     }
   },
-  async initiateLendingStartProcess(gotchi) {
-    await gotchiManager.lendGotchi(gotchi)
+  async initiateLendingProcess(gotchi) {
+    if(configuration.lending === true) {
+      await gotchiManager.lendGotchi(gotchi)
+    } else {
+      await gotchiManager.unlistGotchi(gotchi)
+    }
   },
   async initiateGotchiCaringProcess(gotchi) {
     const nextInteractionDate = new Date(gotchi.infos.lastInteracted * 1000).setHours(

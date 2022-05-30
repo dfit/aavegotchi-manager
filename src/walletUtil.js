@@ -1,5 +1,5 @@
 const configuration = require('../configuration');
-const discordClient = require('./discordLogClient');
+const discordClient = require('./discord/discordBotManager');
 const MAX_GWEI = "80";
 module.exports = {
   getWalletAddress() {

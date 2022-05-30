@@ -6,7 +6,7 @@ const gotchiManager = require('./src/gotchiManager');
 const walletUtil = require('./src/walletUtil');
 const naiveAlgo = require('./src/naiveAlgo');
 const ghstContract = require('./data/ghstcontract');
-const discordClient = require('./src/discordLogClient');
+const discordClient = require('./src/discord/discordBotManager');
 
 async function setup() {
   await discordClient.setupDiscordBot()
@@ -29,6 +29,7 @@ async function main() {
       discordClient.logInfo("Initiate naive algo...")
       await naiveAlgo.routineCheck()
     } catch (e) {
+      console.log(e)
       discordClient.logError(e)
     }
     await new Promise(resolve => setTimeout(resolve, 400000));

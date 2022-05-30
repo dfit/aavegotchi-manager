@@ -5,6 +5,7 @@ let web3Wss = new Web3(providerWSS);
 let web3 = new Web3(providerHttp);
 
 module.exports = {
+  lending: false,
   discordLogLevel: {
     info: false,
     error: true

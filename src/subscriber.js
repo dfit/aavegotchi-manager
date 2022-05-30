@@ -1,7 +1,7 @@
 const configuration = require('../configuration');
 const gotchiManager = require('./gotchiManager');
 const diamondcontract = require('../data/diamondcontract');
-const discordClient = require('./discordLogClient');
+const discordClient = require('./discord/discordBotManager');
 module.exports = {
   async subscribeSmartContractEvent() {
     return new configuration.web3Wss.eth.Contract(diamondcontract.abi, diamondcontract.smartContractAddress).events.Transfer(
