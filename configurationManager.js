@@ -3,11 +3,12 @@ const fs = require('node:fs');
 
 
 module.exports = {
-  updateLendingParameters(ghstUpfrontCost, borrowerShare, ownerShare, lendingDuration) {
+  updateLendingParameters(ghstUpfrontCost, borrowerShare, ownerShare, otherShare, lendingDuration) {
     const configurationFile = './configuration.js';
     configuration.lendParameters.ghstUpfrontCost = ghstUpfrontCost
     configuration.lendParameters.borrower = borrowerShare
     configuration.lendParameters.owner = ownerShare
+    configuration.lendParameters.other = otherShare
     configuration.lendParameters.time = lendingDuration
     fs.readFile(configurationFile, function(err, data) {
       if(err) throw err;
@@ -16,7 +17,7 @@ module.exports = {
       data = data.replace(/borrower: .*,/g, `borrower: ${borrowerShare},`);
       data = data.replace(/owner: .*,/g, `owner: ${ownerShare},`);
       data = data.replace(/time: .*,/g, `time: ${lendingDuration},`);
-      data = data.replace(/other: .*/g, `other: 0`);
+      data = data.replace(/other: .*/g, `other: ${otherShare}`);
       fs.writeFile(configurationFile, data, function(error) {
         if(err) console.log(error)
       });

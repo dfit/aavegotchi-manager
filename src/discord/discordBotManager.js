@@ -111,9 +111,10 @@ module.exports = {
       const ghstUpfrontCost = interaction.fields.getTextInputValue('ghstUpfrontCost');
       const borrowerShare = interaction.fields.getTextInputValue('borrowerShare');
       const ownerShare = interaction.fields.getTextInputValue('ownerShare');
+      const otherShare = interaction.fields.getTextInputValue('otherShare');
       const lendingDuration = interaction.fields.getTextInputValue('lendingDuration');
-      console.log({ ghstUpfrontCost, borrowerShare, ownerShare, lendingDuration });
-      configurationManager.updateLendingParameters(ghstUpfrontCost, borrowerShare, ownerShare, lendingDuration)
+      console.log({ ghstUpfrontCost, borrowerShare, ownerShare,otherShare, lendingDuration });
+      configurationManager.updateLendingParameters(ghstUpfrontCost, borrowerShare, ownerShare, otherShare, lendingDuration)
       return interaction.reply("Gotchi lending parameters updated");
     }
   }

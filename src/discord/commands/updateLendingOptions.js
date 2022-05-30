@@ -21,6 +21,10 @@ module.exports = {
     .setCustomId('ownerShare')
     .setLabel("How much % for owner ?")
     .setStyle('SHORT');
+    const other = new TextInputComponent()
+    .setCustomId('otherSHARE')
+    .setLabel("How much % for third party ?")
+    .setStyle('SHORT');
     const lendingDuration = new TextInputComponent()
     .setCustomId('lendingDuration')
     .setLabel("How much hours ?")
@@ -29,8 +33,9 @@ module.exports = {
     const firstActionRow = new MessageActionRow().addComponents(ghstUpfrontCost);
     const secondActionRow = new MessageActionRow().addComponents(borrower);
     const thirdActionRow = new MessageActionRow().addComponents(owner);
-    const fourthActionRow = new MessageActionRow().addComponents(lendingDuration);
-    modal.addComponents(firstActionRow, secondActionRow, thirdActionRow, fourthActionRow);
+    const fourthActionRow = new MessageActionRow().addComponents(other);
+    const fifthActionRow = new MessageActionRow().addComponents(lendingDuration);
+    modal.addComponents(firstActionRow, secondActionRow, thirdActionRow, fourthActionRow, fifthActionRow);
     await interaction.showModal(modal);
   },
 };
