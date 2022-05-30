@@ -9,9 +9,9 @@ module.exports = {
     if(isGotchiLent) {
       discordClient.logInfo(`Gotchi ${gotchi.tokenId} is already listed or borrowed by someone.`)
     } else if(configuration.lending === false){
-      discordClient.logInfo(`Listing gotchis is disabled for now, change parameter to resume gotchi listing.`)
+      discordClient.logInfo(`@everyone Listing gotchis is disabled for now, change parameter to resume gotchi listing.`)
     } else {
-      discordClient.logInfo(`Listing Gotchi ${gotchi.tokenId}.`)
+      discordClient.logInfo(`@everyone Listing Gotchi ${gotchi.tokenId}.`)
       const transaction = await configuration.aavegotchiContract.methods.addGotchiLending(gotchi.tokenId,
         configuration.web3.utils.toWei(configuration.lendParameters.ghstUpfrontCost), configuration.lendParameters.time * 60 * 60,
         [configuration.lendParameters.owner, configuration.lendParameters.borrower, configuration.lendParameters.other], configuration.walletAddress,
@@ -19,7 +19,7 @@ module.exports = {
         ["0x403E967b044d4Be25170310157cB1A4Bf10bdD0f", "0x44A6e0BE76e1D9620A7F76588e4509fE4fa8E8C8",
           "0x6a3E7C3c6EF65Ee26975b12293cA1AAD7e1dAeD2", "0x42E5E06EF5b90Fe15F853F59299Fc96259209c5C"])
       await walletUtil.sendWithPrivateKey(transaction);
-      discordClient.logTransaction(`Gotchi ${gotchi.tokenId} listed.`)
+      discordClient.logTransaction(`@everyone Gotchi ${gotchi.tokenId} listed.`)
     }
   },
   petGotchi(gotchi, nextInteractionInSec) {
@@ -29,7 +29,7 @@ module.exports = {
       setTimeout(async () => {
         const transaction = configuration.aavegotchiContract.methods.interact([gotchi.tokenId]);
         await walletUtil.sendWithPrivateKey(transaction);
-        discordClient.logInfo(`Gotchi ${gotchi.tokenId} have been petted !`)
+        discordClient.logInfo(`@everyone Gotchi ${gotchi.tokenId} have been petted !`)
         this.petGotchi(gotchi, TWELVE_HOURS_PLUS_10_SEC)
       }, nextInteractionInSec)
     });
@@ -37,12 +37,12 @@ module.exports = {
   async petGotchiV2(gotchi) {
     const transaction = configuration.aavegotchiContract.methods.interact([gotchi.tokenId]);
     await walletUtil.sendWithPrivateKey(transaction);
-    discordClient.logTransaction(`Gotchi ${gotchi.tokenId} have been petted !`)
+    discordClient.logTransaction(`@everyone Gotchi ${gotchi.tokenId} have been petted !`)
   },
   async claimGotchiLending(gotchi) {
     const transaction = await configuration.aavegotchiContract.methods.claimAndEndGotchiLending(gotchi.tokenId)
     await walletUtil.sendWithPrivateKey(transaction, this.lendGotchi, gotchi);
-    discordClient.logTransaction(`Gotchi ${gotchi.tokenId} has been claimed.`)
+    discordClient.logTransaction(`@everyone Gotchi ${gotchi.tokenId} has been claimed.`)
   },
   async populateGotchisInformations() {
     for (const gotchi of configuration.gotchis) {
@@ -58,8 +58,12 @@ module.exports = {
     } else if(gotchi.lendingDetails  && gotchi.lendingDetails.timeAgreed === "0") {
       const transaction = await configuration.aavegotchiContract.methods.cancelGotchiLending(gotchi.tokenId)
       await walletUtil.sendWithPrivateKey(transaction);
-      discordClient.logTransaction(`Gotchi ${gotchi.tokenId} de-listed.`)
+      discordClient.logTransaction(`@everyone Gotchi ${gotchi.tokenId} de-listed.`)
     }
+  },
+  async isChannelable(gotchi) {
+    const lastChanneling = await configuration.realmContract.methods.getLastChanneled(gotchi.tokenId).call()
+    return new Date(lastChanneling * 1000).getUTCDate() !== new Date().getUTCDate()
   }
   // async getGotchiList() {
   //   const allAavegotchisOfOwnerRes = await configuration.aavegotchiContract.methods.allAavegotchisOfOwner(configuration.walletAddress).call();

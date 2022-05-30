@@ -55,6 +55,10 @@ module.exports = {
     } else {
       discordClient.logInfo(`Gotchi ${gotchi.tokenId} will be petted in ${secondUntilNextPettingSession} seconds.`)
     }
+    const isGotchiChannelable = await gotchiManager.isChannelable(gotchi)
+    if(isGotchiChannelable) {
+      discordClient.logInfo(`@everyone Gotchi ${gotchi.tokenId} can be channel.`)
+    }
   },
   async initiateGhstThirdPartySending() {
     const ghstBalance = await configuration.ghstContract.methods.balanceOf(configuration.walletAddress).call()

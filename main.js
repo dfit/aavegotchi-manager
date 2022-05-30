@@ -2,6 +2,7 @@ require('console-stamp')(console, 'yyyy-mm-dd HH:MM:ss.l');
 const subscriber = require("./src/subscriber")
 const configuration = require('./configuration');
 const diamondcontract = require('./data/diamondcontract');
+const realmContract = require('./data/realmcontract');
 const gotchiManager = require('./src/gotchiManager');
 const walletUtil = require('./src/walletUtil');
 const naiveAlgo = require('./src/naiveAlgo');
@@ -14,6 +15,7 @@ async function setup() {
   configuration.walletAddress = walletUtil.getWalletAddress()
   configuration.aavegotchiContract = new configuration.web3.eth.Contract(diamondcontract.abi, diamondcontract.smartContractAddress);
   configuration.ghstContract = new configuration.web3.eth.Contract(ghstContract.abi, ghstContract.smartContractAddress);
+  configuration.realmContract = new configuration.web3.eth.Contract(realmContract.abi, realmContract.smartContractAddress);
 
   // ---- VERSION WITH OPTIMAL JOB (to rework) ----
   // subscriber.subscribeClaimGotchiLending()
