@@ -22,7 +22,7 @@ module.exports = {
     .setLabel("How much % for owner ?")
     .setStyle('SHORT');
     const other = new TextInputComponent()
-    .setCustomId('otherSHARE')
+    .setCustomId('otherShare')
     .setLabel("How much % for third party ?")
     .setStyle('SHORT');
     const lendingDuration = new TextInputComponent()
