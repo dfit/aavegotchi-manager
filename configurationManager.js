@@ -22,16 +22,16 @@ module.exports = {
       });
     });
   },
-  toggleLendingListing(toList) {
+  toggleLendingListing(isToList) {
     const configurationFile = './configuration.js';
     fs.readFile(configurationFile, function(err, data) {
       if(err) throw err;
       data = data.toString();
-      data = data.replace(/lending: .*,/g, `lending: false,`);
+      data = data.replace(/lending: .*,/g, `lending: ${isToList},`);
       fs.writeFile(configurationFile, data, function(error) {
         if(err) console.log(error)
       });
     });
-    configuration.lending = toList;
+    configuration.lending = isToList;
   }
 }
