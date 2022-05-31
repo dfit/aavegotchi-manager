@@ -5,6 +5,7 @@ const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const configuration = require('../../configuration');
 const configurationManager = require('../../configurationManager');
+const discordUtil = require('./util/discordUtil');
 const token = process.env.DISCORD_TOKEN
 const guildId = process.env.ID_GUILD
 const clientId = process.env.ID_CLIENT
@@ -84,24 +85,7 @@ module.exports = {
   notifyCurrentState() {
     setTimeout(() => {
       client.channels.fetch(idChannelInfo).then(async channel => {
-        let message = ""
-        for (const gotchi of configuration.gotchis) {
-          if(gotchi.isLent) {
-            const timeRemaining = (gotchi.lendingDetails.timeAgreed * 1000 + gotchi.lendingDetails.period * 1000) - new Date().getTime()
-            if(timeRemaining < 0) {
-              message += `${gotchi.tokenId} should be claimed since ${timeRemaining / 1000 / 60 / 60} hour(s)\n`
-            } else {
-              message += `${gotchi.tokenId} is lent for ${timeRemaining / 1000 / 60 / 60} hour(s)\n`
-            }
-          } else if(gotchi.lendingDetails && gotchi.lendingDetails.timeAgreed === "0") {
-            message += `${gotchi.tokenId} is listed but not lent\n`
-          } else {
-            message += `${gotchi.tokenId} is not listed\n`
-          }
-          if(gotchi.isChannelable) {
-            message += `${gotchi.tokenId} can be channeled !\n`
-          }
-        }
+        let message = discordUtil.getGotchisNews();
         channel.send(`@everyone Here the news:\n${message}`)
         this.notifyCurrentState()
       });

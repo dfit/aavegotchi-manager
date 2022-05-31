@@ -6,7 +6,7 @@ const gotchiManager = require('../../gotchiManager');
 module.exports = {
   data: new SlashCommandBuilder()
   .setName('stop-lending')
-  .setDescription('Stop all lending and cancel current listing !'),
+  .setDescription('Stop all lending and cancel current listing'),
   async execute(interaction) {
     configurationManager.toggleLendingListing(false)
     for (const gotchi of configuration.gotchis) {
