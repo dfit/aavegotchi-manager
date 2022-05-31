@@ -48,6 +48,7 @@ module.exports = {
     for (const gotchi of configuration.gotchis) {
       const gotchiInfos = await configuration.aavegotchiContract.methods.getAavegotchi(gotchi.tokenId).call()
       configuration.gotchis.find(gotchiInConfig => gotchiInConfig.tokenId = gotchi.tokenId).infos = gotchiInfos
+      configuration.gotchis.find(gotchiInConfig => gotchiInConfig.tokenId = gotchi.tokenId)["isChannelable"] = await this.isChannelable(gotchi)
     }
     discordClient.logInfo(`Gotchis infos refresh.`)
   },

@@ -98,9 +98,10 @@ module.exports = {
           } else {
             message += `${gotchi.tokenId} is not listed\n`
           }
+          if(gotchi.isChannelable) {
+            message += `${gotchi.tokenId} can be channeled !\n`
+          }
         }
-        const ghstBalance = configuration.web3.utils.fromWei(await configuration.ghstContract.methods.balanceOf(configuration.walletAddress).call())
-        message+= `Current GHST balance is : ${ghstBalance}`
         channel.send(`@everyone Here the news:\n${message}`)
         this.notifyCurrentState()
       });
