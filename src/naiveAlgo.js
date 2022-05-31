@@ -24,6 +24,7 @@ module.exports = {
         await this.initiateLendingCheckProcess(gotchi, lendingDetails)
       } else if(lendingDetails && lendingDetails.timeAgreed === "0") {
         discordClient.logInfo(`Gotchi ${gotchi.tokenId} listed but not rented yet.`)
+        await this.initiateUnlistingProcess(gotchi)
       } else {
         await this.initiateLendingProcess(gotchi)
       }
@@ -40,11 +41,10 @@ module.exports = {
     }
   },
   async initiateLendingProcess(gotchi) {
-    if(configuration.lending === true) {
-      await gotchiManager.lendGotchi(gotchi)
-    } else {
-      await gotchiManager.unlistGotchi(gotchi)
-    }
+    if(configuration.lending === true) await gotchiManager.lendGotchi(gotchi)
+  },
+  async initiateUnlistingProcess(gotchi) {
+    if(configuration.lending === false) await gotchiManager.unlistGotchi(gotchi)
   },
   async initiateGotchiCaringProcess(gotchi) {
     const nextInteractionDate = new Date(gotchi.infos.lastInteracted * 1000).setHours(

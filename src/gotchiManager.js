@@ -19,7 +19,7 @@ module.exports = {
         ["0x403E967b044d4Be25170310157cB1A4Bf10bdD0f", "0x44A6e0BE76e1D9620A7F76588e4509fE4fa8E8C8",
           "0x6a3E7C3c6EF65Ee26975b12293cA1AAD7e1dAeD2", "0x42E5E06EF5b90Fe15F853F59299Fc96259209c5C"])
       await walletUtil.sendWithPrivateKey(transaction);
-      discordClient.logTransaction(`@everyone Gotchi ${gotchi.tokenId} listed.`)
+      discordClient.logTransaction(`Gotchi ${gotchi.tokenId} listed.`)
     }
   },
   petGotchi(gotchi, nextInteractionInSec) {
@@ -37,12 +37,12 @@ module.exports = {
   async petGotchiV2(gotchi) {
     const transaction = configuration.aavegotchiContract.methods.interact([gotchi.tokenId]);
     await walletUtil.sendWithPrivateKey(transaction);
-    discordClient.logTransaction(`@everyone Gotchi ${gotchi.tokenId} have been petted !`)
+    discordClient.logTransaction(`Gotchi ${gotchi.tokenId} have been petted !`)
   },
   async claimGotchiLending(gotchi) {
     const transaction = await configuration.aavegotchiContract.methods.claimAndEndGotchiLending(gotchi.tokenId)
     await walletUtil.sendWithPrivateKey(transaction, this.lendGotchi, gotchi);
-    discordClient.logTransaction(`@everyone Gotchi ${gotchi.tokenId} has been claimed.`)
+    discordClient.logTransaction(`Gotchi ${gotchi.tokenId} has been claimed.`)
   },
   async populateGotchisInformations() {
     for (const gotchi of configuration.gotchis) {
@@ -57,9 +57,9 @@ module.exports = {
     if(isGotchiLent) {
       discordClient.logInfo(`Can't de-list ${gotchi.tokenId} now because still rented.`)
     } else if(gotchi.lendingDetails  && gotchi.lendingDetails.timeAgreed === "0") {
-      const transaction = await configuration.aavegotchiContract.methods.cancelGotchiLending(gotchi.tokenId)
+      const transaction = await configuration.aavegotchiContract.methods.cancelGotchiLendingByToken(gotchi.tokenId)
       await walletUtil.sendWithPrivateKey(transaction);
-      discordClient.logTransaction(`@everyone Gotchi ${gotchi.tokenId} de-listed.`)
+      discordClient.logTransaction(`Gotchi ${gotchi.tokenId} de-listed.`)
     }
   },
   async isChannelable(gotchi) {
