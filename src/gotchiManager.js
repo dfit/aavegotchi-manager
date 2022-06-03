@@ -11,7 +11,7 @@ function prepareLendingTransaction(gotchi) {
   if(gotchi.channel.isChannelable || gotchi.channel.hourUntilNextChannel < configuration.lendParameters.time) {
     ghstUpfrontCost = "2"
     lendingTime = Math.ceil(gotchi.channel.hourUntilNextChannel)
-    lendingOptions = [10, 90, 0]
+    lendingOptions = [0, 100, 0]
   }
   return configuration.aavegotchiContract.methods.addGotchiLending(gotchi.tokenId,
     configuration.web3.utils.toWei(ghstUpfrontCost),
