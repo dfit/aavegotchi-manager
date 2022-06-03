@@ -3,6 +3,26 @@ const walletUtil = require('./walletUtil');
 const discordClient = require('./discord/discordBotManager');
 
 const TWELVE_HOURS_PLUS_10_SEC = 43210;
+
+function prepareLendingTransaction(gotchi) {
+  let lendingOptions = [configuration.lendParameters.owner, configuration.lendParameters.borrower, configuration.lendParameters.other]
+  let ghstUpfrontCost = configuration.lendParameters.ghstUpfrontCost
+  let lendingTime = configuration.lendParameters.time
+  if(gotchi.channel.isChannelable || gotchi.channel.hourUntilNextChannel < configuration.lendParameters.time) {
+    ghstUpfrontCost = 2
+    lendingTime = Math.ceil(gotchi.channel.hourUntilNextChannel)
+    lendingOptions = [10, 90, 0]
+  }
+  return configuration.aavegotchiContract.methods.addGotchiLending(gotchi.tokenId,
+    configuration.web3.utils.toWei(ghstUpfrontCost),
+    lendingTime * 60 * 60,
+    lendingOptions,
+    configuration.walletAddress,
+    configuration.lendParameters.thirdPartyAddress, 0,
+    ["0x403E967b044d4Be25170310157cB1A4Bf10bdD0f", "0x44A6e0BE76e1D9620A7F76588e4509fE4fa8E8C8",
+      "0x6a3E7C3c6EF65Ee26975b12293cA1AAD7e1dAeD2", "0x42E5E06EF5b90Fe15F853F59299Fc96259209c5C"]);
+}
+
 module.exports = {
   async lendGotchi(gotchi) {
     const isGotchiLent = await configuration.aavegotchiContract.methods.isAavegotchiLent(gotchi.tokenId).call()
@@ -12,12 +32,7 @@ module.exports = {
       discordClient.logInfo(`@everyone Listing gotchis is disabled for now, change parameter to resume gotchi listing.`)
     } else {
       discordClient.logInfo(`@everyone Listing Gotchi ${gotchi.tokenId}.`)
-      const transaction = await configuration.aavegotchiContract.methods.addGotchiLending(gotchi.tokenId,
-        configuration.web3.utils.toWei(configuration.lendParameters.ghstUpfrontCost), configuration.lendParameters.time * 60 * 60,
-        [configuration.lendParameters.owner, configuration.lendParameters.borrower, configuration.lendParameters.other], configuration.walletAddress,
-        configuration.lendParameters.thirdPartyAddress, 0,
-        ["0x403E967b044d4Be25170310157cB1A4Bf10bdD0f", "0x44A6e0BE76e1D9620A7F76588e4509fE4fa8E8C8",
-          "0x6a3E7C3c6EF65Ee26975b12293cA1AAD7e1dAeD2", "0x42E5E06EF5b90Fe15F853F59299Fc96259209c5C"])
+      const transaction = await prepareLendingTransaction(gotchi)
       await walletUtil.sendWithPrivateKey(transaction);
       discordClient.logTransaction(`Gotchi ${gotchi.tokenId} listed.`)
     }
@@ -48,7 +63,7 @@ module.exports = {
     for (const gotchi of configuration.gotchis) {
       const gotchiInfos = await configuration.aavegotchiContract.methods.getAavegotchi(gotchi.tokenId).call()
       configuration.gotchis.find(gotchiInConfig => gotchiInConfig.tokenId = gotchi.tokenId).infos = gotchiInfos
-      configuration.gotchis.find(gotchiInConfig => gotchiInConfig.tokenId = gotchi.tokenId)["isChannelable"] = await this.isChannelable(gotchi)
+      configuration.gotchis.find(gotchiInConfig => gotchiInConfig.tokenId = gotchi.tokenId)["channel"] = await this.isChannelable(gotchi)
     }
     discordClient.logInfo(`Gotchis infos refresh.`)
   },
@@ -63,8 +78,14 @@ module.exports = {
     }
   },
   async isChannelable(gotchi) {
-    const lastChanneling = await configuration.realmContract.methods.getLastChanneled(gotchi.tokenId).call()
-    return new Date(lastChanneling * 1000).getUTCDate() !== new Date().getUTCDate()
+    const lastChannelingDate = new Date(await configuration.realmContract.methods.getLastChanneled(gotchi.tokenId).call() * 1000)
+    let nextChannelingDate = new Date(lastChannelingDate.getTime())
+    nextChannelingDate.setDate(nextChannelingDate.getDate() + 1)
+    nextChannelingDate.setUTCHours(0)
+    nextChannelingDate.setUTCMinutes(0)
+    nextChannelingDate.setUTCSeconds(0)
+    const timeUntillNextChannel = Math.abs(new Date().getTime() - nextChannelingDate) / 36e5;
+    return {isChannelable: lastChannelingDate.getUTCDate() !== new Date().getUTCDate(), hourUntilNextChannel: timeUntillNextChannel}
   }
   // async getGotchiList() {
   //   const allAavegotchisOfOwnerRes = await configuration.aavegotchiContract.methods.allAavegotchisOfOwner(configuration.walletAddress).call();

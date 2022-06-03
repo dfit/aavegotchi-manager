@@ -16,8 +16,10 @@ module.exports = {
       } else {
         message += `${gotchi.tokenId} is not listed\n`
       }
-      if (gotchi.isChannelable) {
+      if (gotchi.channel.isChannelable) {
         message += `${gotchi.tokenId} can be channeled !\n`
+      } else {
+        message += `${gotchi.tokenId} channel available in ${gotchi.channel.hourUntilNextChannel} hour(s)!\n`
       }
     }
     return message
