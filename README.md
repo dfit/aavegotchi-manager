@@ -13,10 +13,19 @@ The manager will for each gotchis given :
 * check if a lending is available
 * check if a claim is available
 
-It will also optionally transfer any GHST earn to a secured wallet.
+A discord bot is connected to give some feedback :
+* report all error to a dedicated channel if setup.
+* send all interesting transaction (eg: lend, pet, claimed) to an info channel.
+* A time based report send the current lending state of the gotchi, if it has channel available or when it will be.
 
-A discord bot is connected and send all error to a dedicated channel if setup. It also send all interesting transaction (eg: lend, pet, claimed) to an info channel. A time based report send the current ghst hold by the wallet + the current lending state of the gotchi.
+You can also interact with the discord bot with somes commands : 
+* /lending-parameters : Get current lending parameters 
+* /news : Get news about current managed gotchis 
+* /update-lending-options : Change all gotchis lending parameters 
+* /stop-lending : Stop all lending and cancel current listing 
+* /resume-lending : Start or restart lending for all gotchis managed
 
+In test : dynamic setting of options when channel is/will be available during the timeframe of the lending duration setted.
 
 
 ## How it works ##
@@ -53,12 +62,16 @@ npm install
 
 ### 3. Env vars
 
+Every needed information (token/id/...) and the way to obtain them is describe in the [discordjs](https://discordjs.guide/#before-you-begin) guide.
 ```bash 
 export PRIVATE_KEY=<enter-your-private-key> 
 //private key (until I find something better ...)
+export DISCORD_TOKEN=<enter-your-discord-token>
 export ID_CHANNEL_ALERTING=<enter-your-alert-channel-id>
 export ID_CHANNEL_INFO=<enter-your-info-channel-id>
-export DISCORD_TOKEN=<enter-your-discord-token>
+export ID_COMMANDS=<enter-your-command-channel-id>
+export ID_CLIENT=<enter-your-application-id> //go to https://discord.com/developers/applications/me and find "application id" and copy it
+export ID_GUILD=<enter-your-discord-server-id> //right click on channel and select "copy id"
 ```
 
 ### 4. How to run the bot
