@@ -5,7 +5,7 @@ let web3Wss = new Web3(providerWSS);
 let web3 = new Web3(providerHttp);
 
 module.exports = {
-  lending: false,
+  lending: true,
   discordLogLevel: {
     info: false,
     error: true
@@ -17,6 +17,7 @@ module.exports = {
   bcSubscription: null,
   ghstContract: null,
   aavegotchiContract: null,
+  realmContract: null,
   lendParameters : {
     thirdPartyAddress: "0x0000000000000000000000000000000000000000",
     time: 2, //hours
@@ -25,5 +26,6 @@ module.exports = {
     owner: 30,
     other: 0
   },
-  gotchis: [{tokenId: 20322, infos: null, isLent: false, lendingInformations: null}] // override with gotchis in case gotchi already lend I cannot get the original owner of the gotchi easily todo
+  gotchis: [{tokenId: 20322, infos: null, isLent: false, lendingInformations: null, channel: { isChannelable: false, hourUntilNextChannel: 0 }}], // override with gotchis in case gotchi already lend I cannot get the original owner of the gotchi easily todo
+  parcels: [{tokenId: 11363, channel: { isChannelable: false, hourUntilNextChannel: 0 }}]
 }

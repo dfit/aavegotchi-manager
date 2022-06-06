@@ -85,7 +85,7 @@ module.exports = {
   notifyCurrentState() {
     setTimeout(() => {
       client.channels.fetch(idChannelInfo).then(async channel => {
-        let message = discordUtil.getGotchisNews();
+        let message = discordUtil.getNews();
         channel.send(`@everyone Here the news:\n${message}`)
         this.notifyCurrentState()
       });
@@ -100,7 +100,7 @@ module.exports = {
       const lendingDuration = interaction.fields.getTextInputValue('lendingDuration');
       console.log({ ghstUpfrontCost, borrowerShare, ownerShare,otherShare, lendingDuration });
       configurationManager.updateLendingParameters(ghstUpfrontCost, borrowerShare, ownerShare, otherShare, lendingDuration)
-      return interaction.reply("Gotchi lending parameters updated");
+      return interaction.reply(`Gotchi lending parameters updated with :\n- ghstUpfrontCost: ${ghstUpfrontCost} GHST\n- borrowerShare: ${borrowerShare}%\n- ownerShare: ${ownerShare}%\n- otherShare: ${otherShare}%\n- lendingDuration: ${lendingDuration} hour(s)`);
     }
   }
 }

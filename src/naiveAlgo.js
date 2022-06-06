@@ -2,10 +2,12 @@ const configuration = require('../configuration');
 const gotchiManager = require('./gotchiManager');
 const walletUtil = require('./walletUtil');
 const discordClient = require('./discord/discordBotManager');
+const realmManager = require('./realmManager');
 
 module.exports = {
   async routineCheck() {
     await gotchiManager.populateGotchisInformations()
+    await realmManager.populateParcelsInformations()
     if(configuration.lendParameters.thirdPartyAddress !== "0x0000000000000000000000000000000000000000") await this.initiateGhstThirdPartySending()
     for (const gotchi of configuration.gotchis) {
       await this.initiateGotchiCaringProcess(gotchi)

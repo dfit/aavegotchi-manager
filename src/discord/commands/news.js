@@ -6,6 +6,6 @@ module.exports = {
   .setName('news')
   .setDescription('Get news about current managed gotchis'),
   async execute(interaction) {
-    return interaction.reply(discordUtil.getGotchisNews());
+    return interaction.reply(discordUtil.getNews());
     },
 };

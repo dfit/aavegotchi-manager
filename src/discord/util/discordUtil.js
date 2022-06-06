@@ -1,7 +1,7 @@
 const configuration = require('../../../configuration');
 module.exports = {
-  getGotchisNews() {
-    let message = ""
+  getNews() {
+    let message = configuration.gotchis.length > 0 ? "GOTCHIS \n-----\n" : ""
     for (const gotchi of configuration.gotchis) {
       if (gotchi.isLent) {
         const timeRemaining = (gotchi.lendingDetails.timeAgreed * 1000 + gotchi.lendingDetails.period * 1000)
@@ -20,6 +20,14 @@ module.exports = {
         message += `${gotchi.tokenId} can be channeled !\n`
       } else {
         message += `${gotchi.tokenId} channel available in ${gotchi.channel.hourUntilNextChannel} hour(s)!\n`
+      }
+    }
+    message += configuration.parcels.length > 0 ? "\nPARCELS \n-----\n" : ""
+    for (const parcel of configuration.parcels) {
+      if (parcel.channel.isChannelable) {
+        message += `${parcel.tokenId} can be channeled !\n`
+      } else {
+        message += `${parcel.tokenId} channel available in ${parcel.channel.hourUntilNextChannel} hour(s)!\n`
       }
     }
     return message

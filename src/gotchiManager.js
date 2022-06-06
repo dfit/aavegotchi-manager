@@ -10,7 +10,7 @@ function prepareLendingTransaction(gotchi) {
   let lendingTime = configuration.lendParameters.time
   if(gotchi.channel.isChannelable || gotchi.channel.hourUntilNextChannel < configuration.lendParameters.time) {
     lendingTime = Math.ceil(gotchi.channel.hourUntilNextChannel) <= 4 ? 4 : Math.ceil(gotchi.channel.hourUntilNextChannel)
-    ghstUpfrontCost = "1.5"
+    ghstUpfrontCost = "1"
     lendingOptions = [10, 90, 0]
   }
   return configuration.aavegotchiContract.methods.addGotchiLending(gotchi.tokenId,
@@ -62,8 +62,10 @@ module.exports = {
   async populateGotchisInformations() {
     for (const gotchi of configuration.gotchis) {
       const gotchiInfos = await configuration.aavegotchiContract.methods.getAavegotchi(gotchi.tokenId).call()
-      configuration.gotchis.find(gotchiInConfig => gotchiInConfig.tokenId = gotchi.tokenId).infos = gotchiInfos
-      configuration.gotchis.find(gotchiInConfig => gotchiInConfig.tokenId = gotchi.tokenId)["channel"] = await this.isChannelable(gotchi)
+      const channelInformations = await this.getChannelInformations(gotchi)
+      if (channelInformations.isChannelable && !gotchi.channel.isChannelable) discordClient.logTransaction(`@everyone Gotchi ${gotchi.tokenId} is ready for channel!`)
+      gotchi.infos = gotchiInfos
+      gotchi.channel = channelInformations
     }
     discordClient.logInfo(`Gotchis infos refresh.`)
   },
@@ -77,15 +79,15 @@ module.exports = {
       discordClient.logTransaction(`Gotchi ${gotchi.tokenId} de-listed.`)
     }
   },
-  async isChannelable(gotchi) {
+  async getChannelInformations(gotchi) {
     const lastChannelingDate = new Date(await configuration.realmContract.methods.getLastChanneled(gotchi.tokenId).call() * 1000)
     let nextChannelingDate = new Date(lastChannelingDate.getTime())
     nextChannelingDate.setDate(nextChannelingDate.getDate() + 1)
     nextChannelingDate.setUTCHours(0)
     nextChannelingDate.setUTCMinutes(0)
     nextChannelingDate.setUTCSeconds(0)
-    const timeUntillNextChannel = Math.abs(new Date().getTime() - nextChannelingDate) / 36e5;
-    return {isChannelable: lastChannelingDate.getUTCDate() !== new Date().getUTCDate(), hourUntilNextChannel: timeUntillNextChannel}
+    const timeUntillNextChannel = nextChannelingDate - new Date().getTime() / 36e5;
+    return {isChannelable: timeUntillNextChannel < 0, hourUntilNextChannel: timeUntillNextChannel}
   }
   // async getGotchiList() {
   //   const allAavegotchisOfOwnerRes = await configuration.aavegotchiContract.methods.allAavegotchisOfOwner(configuration.walletAddress).call();
