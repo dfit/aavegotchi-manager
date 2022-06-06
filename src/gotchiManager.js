@@ -86,7 +86,7 @@ module.exports = {
     nextChannelingDate.setUTCHours(0)
     nextChannelingDate.setUTCMinutes(0)
     nextChannelingDate.setUTCSeconds(0)
-    const timeUntillNextChannel = nextChannelingDate - new Date().getTime() / 36e5;
+    const timeUntillNextChannel = (nextChannelingDate - new Date().getTime()) / 36e5;
     return {isChannelable: timeUntillNextChannel < 0, hourUntilNextChannel: timeUntillNextChannel}
   }
   // async getGotchiList() {
