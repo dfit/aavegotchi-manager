@@ -16,8 +16,8 @@ module.exports = {
       nextChannelingDate.setTime(nextChannelingDate.getTime() + MAP_ALTER_LEVEL_HOUR_BETWEEN_CHANNEL[parcelFetched.equippedInstallations[0].level] * 60 * 60 * 1000)
       const timeUntillNextChannel = (nextChannelingDate - new Date().getTime()) / 36e5;
 
-      if (timeUntillNextChannel < 0 && !parcel.channel.isChannelable) discordClient.logTransaction(`@everyone Parcel ${parcel.id} is ready for channel!`)
-      parcel.channel = {getChannelInformations: timeUntillNextChannel < 0, hourUntilNextChannel: timeUntillNextChannel}
+      if (timeUntillNextChannel < 0 && !parcel.channel.isChannelable) discordClient.logTransaction(`Parcel ${parcel.tokenId} is ready for channel!`)
+      parcel.channel = {isChannelable: timeUntillNextChannel < 0, hourUntilNextChannel: timeUntillNextChannel}
       console.log(configuration.parcels)
     }
   },

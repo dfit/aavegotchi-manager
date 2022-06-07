@@ -63,7 +63,7 @@ module.exports = {
     for (const gotchi of configuration.gotchis) {
       const gotchiInfos = await configuration.aavegotchiContract.methods.getAavegotchi(gotchi.tokenId).call()
       const channelInformations = await this.getChannelInformations(gotchi)
-      if (channelInformations.isChannelable && !gotchi.channel.isChannelable) discordClient.logTransaction(`@everyone Gotchi ${gotchi.tokenId} is ready for channel!`)
+      if (channelInformations.isChannelable && !gotchi.channel.isChannelable) discordClient.logTransaction(`Gotchi ${gotchi.tokenId} is ready for channel!`)
       gotchi.infos = gotchiInfos
       gotchi.channel = channelInformations
     }
