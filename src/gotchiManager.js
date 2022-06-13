@@ -8,11 +8,12 @@ function prepareLendingTransaction(gotchi) {
   let lendingOptions = [configuration.lendParameters.owner, configuration.lendParameters.borrower, configuration.lendParameters.other]
   let ghstUpfrontCost = configuration.lendParameters.ghstUpfrontCost
   let lendingTime = configuration.lendParameters.time
-  if(gotchi.channel.isChannelable || gotchi.channel.hourUntilNextChannel < configuration.lendParameters.time) {
-    lendingTime = Math.ceil(gotchi.channel.hourUntilNextChannel) <= 4 ? 4 : Math.ceil(gotchi.channel.hourUntilNextChannel)
-    ghstUpfrontCost = "0.5"
-    lendingOptions = [0, 100, 0]
-  }
+  // ----- REUSE WHEN DYNAMIC STOP / RESUME LENDING OCCURS -----
+  // if(gotchi.channel.isChannelable || gotchi.channel.hourUntilNextChannel < configuration.lendParameters.time) {
+  //   lendingTime = Math.ceil(gotchi.channel.hourUntilNextChannel) <= 4 ? 4 : Math.ceil(gotchi.channel.hourUntilNextChannel)
+  //   ghstUpfrontCost = "0.5"
+  //   lendingOptions = [0, 100, 0]
+  // }
   return configuration.aavegotchiContract.methods.addGotchiLending(gotchi.tokenId,
     configuration.web3.utils.toWei(ghstUpfrontCost),
     lendingTime * 60 * 60,
