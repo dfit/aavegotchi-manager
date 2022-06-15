@@ -34,5 +34,17 @@ module.exports = {
       });
     });
     configuration.lending = isToList;
+  },
+  togglePauseIfChannelingReady(isLendingActivatedForGotchiToChannel) {
+    const configurationFile = './configuration.js';
+    fs.readFile(configurationFile, function(err, data) {
+      if(err) throw err;
+      data = data.toString();
+      data = data.replace(/pauseIfChannelingReady: .*,/g, `pauseIfChannelingReady: ${isLendingActivatedForGotchiToChannel},`);
+      fs.writeFile(configurationFile, data, function(error) {
+        if(err) console.log(error)
+      });
+    });
+    configuration.pauseIfChannelingReady = isLendingActivatedForGotchiToChannel;
   }
 }

@@ -12,6 +12,7 @@ module.exports = {
 **/update-lending-options** : Change all gotchis lending parameters
 **/stop-lending** : Stop all lending and cancel current listing
 **/resume-lending** : Start or restart lending for all gotchis managed
+**/toggle-lending-channelable** : Stop or resume all lending for gotchi that have channel available
     `);
   },
 };

@@ -29,8 +29,10 @@ module.exports = {
     const isGotchiLent = await configuration.aavegotchiContract.methods.isAavegotchiLent(gotchi.tokenId).call()
     if(isGotchiLent) {
       discordClient.logInfo(`Gotchi ${gotchi.tokenId} is already listed or borrowed by someone.`)
-    } else if(configuration.lending === false){
+    } else if(configuration.lending === false) {
       discordClient.logInfo(`@everyone Listing gotchis is disabled for now, change parameter to resume gotchi listing.`)
+    } else if(configuration.pauseIfChannelingReady && gotchi.channel.isChannelable) {
+      discordClient.logInfo(`@everyone Gotchi ${gotchi.tokenId} channelable and current lending is paused.`)
     } else {
       discordClient.logInfo(`@everyone Listing Gotchi ${gotchi.tokenId}.`)
       const transaction = await prepareLendingTransaction(gotchi)
