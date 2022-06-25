@@ -33,8 +33,14 @@ In test : dynamic setting of options when channel is/will be available during th
 A configuration file take all the informations needed and use them across all routines to perform all actions listed.
 Actions are runs based on a 5 minutes period.
 
-An update will use only events to perform actions and will be more efficient.
+I personnaly use a dedicated wallet where I allow it to pet and manage lending to still have my gotchi on a securized wallet. 
 
+To do so you will need to use `setLendingOperator` and `setOperatorForAll` on https://louper.dev/diamond/0x86935F11C86623deC8a25696E1C19a8659CbF95d?network=polygon this is a smart contract explorer that will help you perform some functions directly from your browser as in a web3 website.
+
+Function to set pet operator for an other wallet :
+![](assets/images/setPetOperator.png)
+Function to set lending operator for an other wallet :
+![](assets/images/setLendingOperator.png)
 ## Prerequisites
 
 * node
